@@ -1,0 +1,169 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Pricing API",
+    "description": "Servicio para la gestión de precios y tarifas de productos por fechas y prioridad.",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:8080",
+      "description": "Generated server url"
+    }
+  ],
+  "tags": [
+    {
+      "name": "Prices",
+      "description": "API para consulta de tarifas de precios de productos"
+    }
+  ],
+  "paths": {
+    "/api/prices": {
+      "get": {
+        "tags": [
+          "Prices"
+        ],
+        "summary": "Consultar precio aplicable",
+        "description": "Devuelve el precio con mayor prioridad para un producto, cadena y fecha específica.",
+        "operationId": "getPrice",
+        "parameters": [
+          {
+            "name": "brandId",
+            "in": "query",
+            "description": "ID de la cadena (1 = ZARA)",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "minimum": 1
+            },
+            "example": 1
+          },
+          {
+            "name": "productId",
+            "in": "query",
+            "description": "ID del producto",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64",
+              "minimum": 1
+            },
+            "example": 35455
+          },
+          {
+            "name": "applicationDate",
+            "in": "query",
+            "description": "Fecha de aplicación (ISO 8601)",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "example": "2020-06-14T10:00:00"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Precio encontrado",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/PriceResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "No se encontró un precio aplicable",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Parámetros de entrada inválidos",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "ErrorResponse": {
+        "type": "object",
+        "description": "Objeto de error",
+        "properties": {
+          "timestamp": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "status": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "error": {
+            "type": "string"
+          },
+          "message": {
+            "type": "string"
+          },
+          "path": {
+            "type": "string"
+          }
+        }
+      },
+      "PriceResponse": {
+        "type": "object",
+        "description": "Información del precio final aplicable",
+        "properties": {
+          "productId": {
+            "type": "integer",
+            "format": "int64",
+            "example": 35455
+          },
+          "brandId": {
+            "type": "integer",
+            "format": "int32",
+            "example": 1
+          },
+          "priceList": {
+            "type": "integer",
+            "format": "int32",
+            "description": "Tarifa de precios aplicable",
+            "example": 1
+          },
+          "startDate": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2020-06-14-00.00.00"
+          },
+          "endDate": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2020-06-14-00.00.00"
+          },
+          "finalPrice": {
+            "type": "number",
+            "format": "double",
+            "example": "2020-06-14-00.00.00"
+          },
+          "currency": {
+            "type": "string",
+            "example": "2020-06-14-00.00.00"
+          }
+        }
+      }
+    }
+  }
+}
