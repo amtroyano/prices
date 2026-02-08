@@ -1,7 +1,7 @@
 package com.example.demo.infrastructure.adapter.handler;
 
 import com.example.demo.domain.exceptions.PriceNotFoundException;
-import com.example.demo.infrastructure.adapter.inbound.dto.ErrorResponse;
+import com.example.demo.domain.model.response.ErrorResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import java.time.LocalDateTime;
 import org.springframework.http.HttpStatus;
@@ -23,7 +23,6 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         ErrorResponse.builder()
             .timestamp(LocalDateTime.now())
             .status(HttpStatus.NOT_FOUND.value())
-            .error("Price Not Found")
             .message(ex.getMessage())
             .path(request.getRequestURI())
             .build();
@@ -40,7 +39,6 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         ErrorResponse.builder()
             .timestamp(LocalDateTime.now())
             .status(HttpStatus.INTERNAL_SERVER_ERROR.value())
-            .error("Error")
             .message(ex.getMessage())
             .path(request.getRequestURI())
             .build();

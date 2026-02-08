@@ -3,7 +3,7 @@ package com.example.demo.cucumber;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-import com.example.demo.infrastructure.adapter.inbound.dto.PriceResponse;
+import com.example.demo.domain.model.response.PriceResponse;
 import io.cucumber.java.es.Cuando;
 import io.cucumber.java.es.Dado;
 import io.cucumber.java.es.Entonces;
@@ -33,11 +33,10 @@ public class PriceStepDefinition {
 
   @Cuando("se realiza la consulta al servicio de precios")
   public void executeRequest() {
-    // CONSTRUCCIÓN DE URI ABSOLUTA (Requerido para evitar el IllegalArgumentException)
     String url =
         String.format(
-            "http://localhost:%d/api/prices?brandId=%s&productId=%s&applicationDate=%s",
-            port, brandId, productId, date);
+            "http://localhost:%d/api/prices?productId=%s&brandId=%s&dateToSearch=%s",
+            port, productId, brandId, date);
 
     response = restTemplate.getForEntity(url, PriceResponse.class);
   }
@@ -50,12 +49,12 @@ public class PriceStepDefinition {
   @Y("el precio final es {double}")
   public void verifyPrice(Double expectedPrice) {
     assertNotNull(response.getBody());
-    assertEquals(expectedPrice, response.getBody().getFinalPrice());
+    assertEquals(expectedPrice, response.getBody().finalPrice());
   }
 
   @Y("la tarifa aplicada es la {int}")
   public void verifyPriceList(int expectedList) {
     assertNotNull(response.getBody());
-    assertEquals(expectedList, response.getBody().getPriceList());
+    assertEquals(expectedList, response.getBody().priceList());
   }
 }

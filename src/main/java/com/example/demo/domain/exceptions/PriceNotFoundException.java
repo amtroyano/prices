@@ -1,11 +1,14 @@
 package com.example.demo.domain.exceptions;
 
-import java.time.LocalDateTime;
+import com.example.demo.domain.model.request.FilterPriceRequest;
 
 public class PriceNotFoundException extends RuntimeException {
-  public PriceNotFoundException(Integer brandId, Long productId, LocalDateTime date) {
+  public PriceNotFoundException(FilterPriceRequest filterPriceRequest) {
     super(
         String.format(
-            "No price found for brand %d, product %d at date %s", brandId, productId, date));
+            "No price found for brand %d, product %d at date %s",
+            filterPriceRequest.brandId(),
+            filterPriceRequest.productId(),
+            filterPriceRequest.dateToSearch()));
   }
 }
