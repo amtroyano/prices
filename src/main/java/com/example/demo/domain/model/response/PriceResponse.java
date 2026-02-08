@@ -16,5 +16,6 @@ public record PriceResponse(
     @Schema(example = "2020-06-14-00.00.00", description = "Fecha de fin del precio")
         @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
         LocalDateTime endDate,
-    @Schema(example = "25.25", description = "Precio entre las fechas marcadas") Double finalPrice,
+    @Schema(example = "25.25", description = "Precio entre las fechas marcadas")
+        BigDecimal finalPrice,
     @Schema(example = "EUR", description = "Moneda") String currency) {}

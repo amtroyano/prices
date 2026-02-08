@@ -8,6 +8,7 @@ import io.cucumber.java.es.Cuando;
 import io.cucumber.java.es.Dado;
 import io.cucumber.java.es.Entonces;
 import io.cucumber.java.es.Y;
+import java.math.BigDecimal;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
@@ -46,8 +47,8 @@ public class PriceStepDefinition {
     assertEquals(statusCode, response.getStatusCode().value());
   }
 
-  @Y("el precio final es {double}")
-  public void verifyPrice(Double expectedPrice) {
+  @Y("el precio final es {bigDecimal}")
+  public void verifyPrice(BigDecimal expectedPrice) {
     assertNotNull(response.getBody());
     assertEquals(expectedPrice, response.getBody().finalPrice());
   }
