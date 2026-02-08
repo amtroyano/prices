@@ -14,6 +14,9 @@ CREATE TABLE PRICES (
 );
 
 -- Comentario: 
--- BRAND_ID: 1 = ZARA
+-- BRAND_ID: 1 Marca 1
 -- PRICE: Usamos DECIMAL para precisión monetaria (evita errores de redondeo de Double/Float)
 -- TIMESTAMP: Compatible con LocalDateTime de Java
+
+CREATE INDEX IDX_PRICES
+ON PRICES (BRAND_ID, START_DATE, END_DATE, PRODUCT_ID);

@@ -1,9 +1,8 @@
 package com.example.demo.application.port.inbound;
 
-import com.example.demo.domain.model.Price;
-
-import java.time.LocalDateTime;
+import com.example.demo.domain.model.request.FilterPriceRequest;
+import com.example.demo.domain.model.response.PriceResponse;
 
 public interface GetPriceUseCase {
-  Price execute(Integer brandId, Long productId, LocalDateTime date);
+  PriceResponse execute(FilterPriceRequest filterPriceRequest);
 }

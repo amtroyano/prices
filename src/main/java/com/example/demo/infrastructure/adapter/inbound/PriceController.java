@@ -1,11 +1,9 @@
 package com.example.demo.infrastructure.adapter.inbound;
 
 import com.example.demo.application.port.inbound.GetPriceUseCase;
-import com.example.demo.domain.model.Price;
-import com.example.demo.infrastructure.adapter.inbound.dto.PriceResponse;
-import com.example.demo.infrastructure.adapter.inbound.mapper.PriceMapper;
+import com.example.demo.domain.model.request.FilterPriceRequest;
+import com.example.demo.domain.model.response.PriceResponse;
 import com.example.demo.infrastructure.port.PriceControllerApi;
-import java.time.LocalDateTime;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -17,17 +15,13 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/prices")
 @RequiredArgsConstructor
 @Validated
-
 public class PriceController implements PriceControllerApi {
 
   private final GetPriceUseCase getPriceUseCase;
-  private final PriceMapper priceMapper;
 
   @GetMapping
-  public ResponseEntity<PriceResponse> getPrice(
-      Integer brandId, Long productId, LocalDateTime applicationDate) {
+  public ResponseEntity<PriceResponse> getPrice(FilterPriceRequest filterPriceRequest) {
 
-    Price price = getPriceUseCase.execute(brandId, productId, applicationDate);
-    return ResponseEntity.ok(priceMapper.toResponse(price));
+    return ResponseEntity.ok(getPriceUseCase.execute(filterPriceRequest));
   }
 }

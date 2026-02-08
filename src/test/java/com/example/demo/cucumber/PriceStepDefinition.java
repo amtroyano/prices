@@ -3,7 +3,7 @@ package com.example.demo.cucumber;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-import com.example.demo.infrastructure.adapter.inbound.dto.PriceResponse;
+import com.example.demo.domain.model.response.PriceResponse;
 import io.cucumber.java.es.Cuando;
 import io.cucumber.java.es.Dado;
 import io.cucumber.java.es.Entonces;

@@ -4,9 +4,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 
-import com.example.demo.application.port.outbound.PriceRepositoryPort;
 import com.example.demo.domain.exceptions.PriceNotFoundException;
-import com.example.demo.domain.model.Price;
 import java.time.LocalDateTime;
 import java.util.Optional;
 import org.junit.jupiter.api.DisplayName;

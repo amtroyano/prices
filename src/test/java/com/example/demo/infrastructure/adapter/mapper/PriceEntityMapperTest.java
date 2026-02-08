@@ -1,12 +1,11 @@
 package com.example.demo.infrastructure.adapter.mapper;
 
-import com.example.demo.domain.model.Price;
-import com.example.demo.infrastructure.adapter.outbound.entity.PriceEntity;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+import com.example.demo.infrastructure.adapter.persistence.entity.PriceEntity;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @SpringBootTest
 class PriceEntityMapperTest {

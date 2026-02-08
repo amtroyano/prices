@@ -1,20 +1,17 @@
 package com.example.demo.infrastructure.port;
 
-import com.example.demo.infrastructure.adapter.inbound.dto.ErrorResponse;
-import com.example.demo.infrastructure.adapter.inbound.dto.PriceResponse;
+import com.example.demo.domain.model.request.FilterPriceRequest;
+import com.example.demo.domain.model.response.ErrorResponse;
+import com.example.demo.domain.model.response.PriceResponse;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.validation.constraints.Min;
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
-import java.time.LocalDateTime;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.RequestParam;
 
 @Tag(name = "Prices", description = "API para consulta de tarifas de precios de productos")
 public interface PriceControllerApi {
@@ -33,18 +30,11 @@ public interface PriceControllerApi {
         @ApiResponse(
             responseCode = "400",
             description = "Parámetros de entrada inválidos",
+            content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
+        @ApiResponse(
+            responseCode = "500",
+            description = "Error Interno",
             content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
       })
-  ResponseEntity<PriceResponse> getPrice(
-      @Parameter(description = "ID de la cadena (1 = ZARA)", example = "1")
-          @RequestParam
-          @NotNull
-          @Min(1)
-          Integer brandId,
-      @Parameter(description = "ID del producto", example = "35455") @RequestParam @NotNull @Min(1)
-          Long productId,
-      @Parameter(description = "Fecha de aplicación (ISO 8601)", example = "2020-06-14T10:00:00")
-          @RequestParam
-          @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
-          LocalDateTime applicationDate);
+  ResponseEntity<PriceResponse> getPrice(@NotNull @Valid FilterPriceRequest filterPriceRequest);
 }
