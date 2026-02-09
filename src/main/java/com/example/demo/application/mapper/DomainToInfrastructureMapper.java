@@ -1,8 +1,8 @@
 package com.example.demo.application.mapper;
 
 import com.example.demo.domain.model.FilterPrice;
-import com.example.demo.domain.model.request.FilterPriceRequest;
-import com.example.demo.domain.model.response.PriceResponse;
+import com.example.demo.infrastructure.adapter.inbound.request.FilterPriceRequest;
+import com.example.demo.infrastructure.adapter.inbound.response.PriceResponse;
 import com.example.demo.infrastructure.persistence.entity.PriceEntity;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;

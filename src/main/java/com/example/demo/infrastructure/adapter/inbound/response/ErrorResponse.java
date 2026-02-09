@@ -1,4 +1,4 @@
-package com.example.demo.domain.model.response;
+package com.example.demo.infrastructure.adapter.inbound.response;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.time.LocalDateTime;

@@ -3,7 +3,7 @@ package com.example.demo.cucumber;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-import com.example.demo.domain.model.response.PriceResponse;
+import com.example.demo.infrastructure.adapter.inbound.response.PriceResponse;
 import io.cucumber.java.es.Cuando;
 import io.cucumber.java.es.Dado;
 import io.cucumber.java.es.Entonces;
@@ -47,10 +47,10 @@ public class PriceStepDefinition {
     assertEquals(statusCode, response.getStatusCode().value());
   }
 
-  @Y("el precio final es {bigDecimal}")
-  public void verifyPrice(BigDecimal expectedPrice) {
+  @Y("el precio final es {string}")
+  public void verifyPrice(String expectedPrice) {
     assertNotNull(response.getBody());
-    assertEquals(expectedPrice, response.getBody().finalPrice());
+    assertEquals(new BigDecimal(expectedPrice.replace(",", ".")), response.getBody().finalPrice());
   }
 
   @Y("la tarifa aplicada es la {int}")

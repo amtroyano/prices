@@ -1,8 +1,8 @@
 package com.example.demo.infrastructure.port;
 
-import com.example.demo.domain.model.request.FilterPriceRequest;
-import com.example.demo.domain.model.response.ErrorResponse;
-import com.example.demo.domain.model.response.PriceResponse;
+import com.example.demo.infrastructure.adapter.inbound.request.FilterPriceRequest;
+import com.example.demo.infrastructure.adapter.inbound.response.ErrorResponse;
+import com.example.demo.infrastructure.adapter.inbound.response.PriceResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;

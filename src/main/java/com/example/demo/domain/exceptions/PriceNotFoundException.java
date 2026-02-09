@@ -1,6 +1,6 @@
 package com.example.demo.domain.exceptions;
 
-import com.example.demo.domain.model.request.FilterPriceRequest;
+import com.example.demo.infrastructure.adapter.inbound.request.FilterPriceRequest;
 
 public class PriceNotFoundException extends RuntimeException {
   public PriceNotFoundException(FilterPriceRequest filterPriceRequest) {

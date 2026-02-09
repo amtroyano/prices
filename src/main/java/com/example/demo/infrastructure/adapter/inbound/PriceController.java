@@ -1,8 +1,8 @@
 package com.example.demo.infrastructure.adapter.inbound;
 
 import com.example.demo.application.port.inbound.GetPriceUseCase;
-import com.example.demo.domain.model.request.FilterPriceRequest;
-import com.example.demo.domain.model.response.PriceResponse;
+import com.example.demo.infrastructure.adapter.inbound.request.FilterPriceRequest;
+import com.example.demo.infrastructure.adapter.inbound.response.PriceResponse;
 import com.example.demo.infrastructure.port.PriceControllerApi;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;

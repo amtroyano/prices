@@ -1,4 +1,4 @@
-package com.example.demo.domain.model.request;
+package com.example.demo.infrastructure.adapter.inbound.request;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Min;
