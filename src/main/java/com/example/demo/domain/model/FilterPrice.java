@@ -1,5 +1,5 @@
 package com.example.demo.domain.model;
 
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 
-public record FilterPrice(Long productId, Integer brandId, LocalDateTime dateToSearch) {}
+public record FilterPrice(Long productId, Integer brandId, OffsetDateTime dateToSearch) {}

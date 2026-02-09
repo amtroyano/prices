@@ -28,46 +28,20 @@
         "operationId": "getPrice",
         "parameters": [
           {
-            "name": "brandId",
+            "name": "filterPriceRequest",
             "in": "query",
-            "description": "ID de la cadena (1 = ZARA)",
+            "description": "Objeto para filtrar los precios",
             "required": true,
             "schema": {
-              "type": "integer",
-              "format": "int32",
-              "minimum": 1
-            },
-            "example": 1
-          },
-          {
-            "name": "productId",
-            "in": "query",
-            "description": "ID del producto",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int64",
-              "minimum": 1
-            },
-            "example": 35455
-          },
-          {
-            "name": "applicationDate",
-            "in": "query",
-            "description": "Fecha de aplicación (ISO 8601)",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "format": "date-time"
-            },
-            "example": "2020-06-14T10:00:00"
+              "$ref": "#/components/schemas/FilterPriceRequest"
+            }
           }
         ],
         "responses": {
           "200": {
             "description": "Precio encontrado",
             "content": {
-              "*/*": {
+              "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/PriceResponse"
                 }
@@ -77,9 +51,15 @@
           "404": {
             "description": "No se encontró un precio aplicable",
             "content": {
-              "*/*": {
+              "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "example": {
+                  "timestamp": "2020-06-14T16:00:00Z",
+                  "status": 404,
+                  "message": "No existe tarifa para la fecha indicada",
+                  "path": "/api/prices"
                 }
               }
             }
@@ -87,9 +67,31 @@
           "400": {
             "description": "Parámetros de entrada inválidos",
             "content": {
-              "*/*": {
+              "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "example": {
+                  "timestamp": "2020-06-14T10:00:00Z",
+                  "status": 400,
+                  "message": "Parámetros de entrada inválidos",
+                  "path": "/api/prices"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Error Interno",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "example": {
+                  "timestamp": "2020-06-14T16:00:00Z",
+                  "status": 500,
+                  "message": "Error Interno",
+                  "path": "/api/prices"
                 }
               }
             }
@@ -100,28 +102,38 @@
   },
   "components": {
     "schemas": {
-      "ErrorResponse": {
+      "FilterPriceRequest": {
         "type": "object",
-        "description": "Objeto de error",
         "properties": {
-          "timestamp": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "status": {
+          "productId": {
             "type": "integer",
-            "format": "int32"
+            "format": "int64",
+            "description": "Identificador del producto",
+            "example": 35455,
+            "minimum": 1,
+            "readOnly": true
           },
-          "error": {
-            "type": "string"
+          "brandId": {
+            "type": "integer",
+            "format": "int32",
+            "description": "Identificador de la marca",
+            "example": 1,
+            "minimum": 1,
+            "readOnly": true
           },
-          "message": {
-            "type": "string"
-          },
-          "path": {
-            "type": "string"
+          "dateToSearch": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Fecha de aplicación (ISO 8601)",
+            "example": "2020-11-30T23:59:59",
+            "readOnly": true
           }
-        }
+        },
+        "required": [
+          "brandId",
+          "dateToSearch",
+          "productId"
+        ]
       },
       "PriceResponse": {
         "type": "object",
@@ -130,37 +142,81 @@
           "productId": {
             "type": "integer",
             "format": "int64",
-            "example": 35455
+            "description": "Identificador del producto",
+            "example": 1,
+            "readOnly": true
           },
           "brandId": {
             "type": "integer",
             "format": "int32",
-            "example": 1
+            "description": "Identificador de la marca",
+            "example": 1,
+            "readOnly": true
           },
           "priceList": {
             "type": "integer",
             "format": "int32",
             "description": "Tarifa de precios aplicable",
-            "example": 1
+            "example": 3,
+            "readOnly": true
           },
           "startDate": {
             "type": "string",
             "format": "date-time",
-            "example": "2020-06-14-00.00.00"
+            "description": "Fecha de inicio del precio",
+            "example": "2020-06-14-00.00.00",
+            "readOnly": true
           },
           "endDate": {
             "type": "string",
             "format": "date-time",
-            "example": "2020-06-14-00.00.00"
+            "description": "Fecha de fin del precio",
+            "example": "2020-06-14-00.00.00",
+            "readOnly": true
           },
           "finalPrice": {
             "type": "number",
-            "format": "double",
-            "example": "2020-06-14-00.00.00"
+            "description": "Precio entre las fechas marcadas",
+            "example": 25.25,
+            "readOnly": true
           },
           "currency": {
             "type": "string",
-            "example": "2020-06-14-00.00.00"
+            "description": "Moneda",
+            "example": "EUR",
+            "readOnly": true
+          }
+        }
+      },
+      "ErrorResponse": {
+        "type": "object",
+        "description": "Objeto de error",
+        "properties": {
+          "timestamp": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Fecha del error",
+            "example": "020-06-14-00.00.00",
+            "readOnly": true
+          },
+          "status": {
+            "type": "integer",
+            "format": "int32",
+            "description": "Código del error de la respuesta",
+            "example": 404,
+            "readOnly": true
+          },
+          "message": {
+            "type": "string",
+            "description": "Mensaje del error",
+            "example": "Objeto no encontrado",
+            "readOnly": true
+          },
+          "path": {
+            "type": "string",
+            "description": "LLamada que produjo el error",
+            "example": "/list/prices",
+            "readOnly": true
           }
         }
       }

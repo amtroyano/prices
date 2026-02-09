@@ -18,10 +18,15 @@
 
     <properties>
         <java.version>21</java.version>
+
+        <!-- Dependencies -->
         <mapstruct.version>1.5.5.Final</mapstruct.version>
         <springdoc-openapi-starter-webmvc-ui.version>3.0.1</springdoc-openapi-starter-webmvc-ui.version>
         <cucumber-junit-platform-engine.version>7.15.0</cucumber-junit-platform-engine.version>
         <httpclient5.version>5.4.1</httpclient5.version>
+
+        <!-- Plugins -->
+        <openapi-generator-maven-plugin.version>7.19.0</openapi-generator-maven-plugin.version>
     </properties>
 
     <dependencies>
@@ -148,6 +153,7 @@
                     </annotationProcessorPaths>
                 </configuration>
             </plugin>
+
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
@@ -160,6 +166,47 @@
                     </excludes>
                 </configuration>
             </plugin>
+
+            <plugin>
+                <groupId>org.openapitools</groupId>
+                <artifactId>openapi-generator-maven-plugin</artifactId>
+                <version>${openapi-generator-maven-plugin.version}</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>generate</goal>
+                        </goals>
+                        <configuration>
+                            <inputSpec>${project.basedir}/src/main/resources/api-spec/openapi.json</inputSpec>
+                            <generatorName>spring</generatorName>
+                            <library>spring-boot</library>
+
+                            <apiPackage>com.example.demo.infrastructure.port</apiPackage>
+                            <modelPackage>com.example.demo.infrastructure.adapter.dto</modelPackage>
+
+                            <generateSupportingFiles>false</generateSupportingFiles>
+                            <generateModelTests>false</generateModelTests>
+                            <generateModelDocumentation>false</generateModelDocumentation>
+
+                            <configOptions>
+                                <useSpringBoot3>true</useSpringBoot3>
+                                <interfaceOnly>true</interfaceOnly>
+                                <useTags>true</useTags>
+                                <useRecords>true</useRecords>
+                                <useBeanValidation>true</useBeanValidation>
+                                <performBeanValidation>true</performBeanValidation>
+                                <skipOperationExample>true</skipOperationExample>
+                                <skipDefaultInterface>true</skipDefaultInterface>
+                                <openApiNullable>false</openApiNullable>
+                                <additionalModelTypeAnnotations>
+                                    @lombok.Builder
+                                </additionalModelTypeAnnotations>
+                            </configOptions>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
         </plugins>
     </build>
 

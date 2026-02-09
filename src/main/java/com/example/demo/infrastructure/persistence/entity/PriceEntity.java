@@ -2,7 +2,7 @@ package com.example.demo.infrastructure.persistence.entity;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -21,11 +21,11 @@ public class PriceEntity {
 
   @NotNull
   @Column(name = "START_DATE", nullable = false)
-  private LocalDateTime startDate;
+  private OffsetDateTime startDate;
 
   @NotNull
   @Column(name = "END_DATE", nullable = false)
-  private LocalDateTime endDate;
+  private OffsetDateTime endDate;
 
   @NotNull
   @Column(name = "PRICE_LIST", nullable = false)
