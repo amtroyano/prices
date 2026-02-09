@@ -3,6 +3,7 @@ package com.example.demo.application.usecase;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import com.example.demo.application.mapper.DomainToInfrastructureMapper;
@@ -21,11 +22,17 @@ import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 @ExtendWith(MockitoExtension.class)
 class PriceUseCaseTest {
+
+  private static final Long PRODUCT_ID_VALUE = 35455L;
+  private static final Integer BRAND_ID_VALUE = 1;
+  private static final Double FINAL_PRICE = 38.95;
+  private static final String CURRENCY = "EUR";
 
   @Mock private PriceRepositoryPort priceRepositoryPort;
 
@@ -40,47 +47,47 @@ class PriceUseCaseTest {
 
   @Test
   void execute_WithValidValues() {
-    FilterPriceRequest filterPriceRequest = new FilterPriceRequest(35455L, 1, LocalDateTime.now());
+    FilterPriceRequest filterPriceRequest =
+        new FilterPriceRequest(PRODUCT_ID_VALUE, BRAND_ID_VALUE, LocalDateTime.now());
     PriceEntity priceEntity = new PriceEntity();
     priceEntity.setId(1L);
-    priceEntity.setProductId(35455L);
-    priceEntity.setBrandId(1);
+    priceEntity.setProductId(PRODUCT_ID_VALUE);
+    priceEntity.setBrandId(BRAND_ID_VALUE);
     priceEntity.setPriceList(4);
     priceEntity.setPriority(0);
     priceEntity.setStartDate(LocalDateTime.parse("2020-06-15T16:00:00"));
     priceEntity.setEndDate(LocalDateTime.parse("2020-12-31T23:59:59"));
-    priceEntity.setAmount(new MoneyEntity(BigDecimal.valueOf(38.95), "EUR"));
+    priceEntity.setAmount(new MoneyEntity(BigDecimal.valueOf(FINAL_PRICE), CURRENCY));
 
     PriceResponse expected =
         new PriceResponse(
-            35455L,
-            1,
+            PRODUCT_ID_VALUE,
+            BRAND_ID_VALUE,
             4,
             LocalDateTime.parse("2020-06-15T16:00:00"),
             LocalDateTime.parse("2020-12-31T23:59:59"),
-            BigDecimal.valueOf(38.95),
-            "EUR");
+            BigDecimal.valueOf(FINAL_PRICE),
+            CURRENCY);
 
     when(priceRepositoryPort.findTopPrice(any(FilterPrice.class)))
         .thenReturn(Optional.of(priceEntity));
 
     PriceResponse actual = getPriceUseCase.execute(filterPriceRequest);
+
+    ArgumentCaptor<FilterPrice> priceEntityCaptor = ArgumentCaptor.forClass(FilterPrice.class);
+    verify(priceRepositoryPort).findTopPrice(priceEntityCaptor.capture());
+    FilterPrice filterPrice = priceEntityCaptor.getValue();
+    assertThat(filterPrice.brandId()).isEqualTo(filterPriceRequest.brandId());
+    assertThat(filterPrice.productId()).isEqualTo(filterPriceRequest.productId());
+    assertThat(filterPrice.dateToSearch()).isEqualTo(filterPriceRequest.dateToSearch());
+
     assertThat(actual).isEqualTo(expected);
   }
 
   @Test
   void execute_WithNoValidValues() {
-    FilterPriceRequest filterPriceRequest = new FilterPriceRequest(35455L, 10, LocalDateTime.now());
-
-    PriceResponse expected =
-        new PriceResponse(
-            35455L,
-            1,
-            4,
-            LocalDateTime.parse("2020-06-15T16:00:00"),
-            LocalDateTime.parse("2020-12-31T23:59:59"),
-            BigDecimal.valueOf(38.95),
-            "EUR");
+    FilterPriceRequest filterPriceRequest =
+        new FilterPriceRequest(PRODUCT_ID_VALUE, 10, LocalDateTime.now());
 
     when(priceRepositoryPort.findTopPrice(any(FilterPrice.class))).thenReturn(Optional.empty());
 

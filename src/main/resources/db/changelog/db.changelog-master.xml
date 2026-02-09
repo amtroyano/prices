@@ -5,6 +5,14 @@
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
                       http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
 
+    <changeSet id="tag-v0.0.0" author="author">
+        <tagDatabase tag="v0.0.0"/>
+    </changeSet>
+
     <include file="db/changelog/changes/001-create-prices-table.xml"/>
     <include file="db/changelog/changes/002-insert-initial-prices.xml"/>
+
+    <changeSet id="tag-v1.0.0" author="author">
+        <tagDatabase tag="v1.0.0"/>
+    </changeSet>
 </databaseChangeLog>
