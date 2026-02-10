@@ -13,8 +13,8 @@
     <groupId>com.example</groupId>
     <artifactId>demo</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>demo</name>
-    <description>Demo project for Spring Boot</description>
+    <name>Price Service</name>
+    <description>Demo project for Spring Boot to get prices</description>
 
     <properties>
         <java.version>21</java.version>

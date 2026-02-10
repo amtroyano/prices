@@ -25,7 +25,7 @@ import org.springframework.test.web.servlet.MockMvc;
 @WebMvcTest(PriceController.class)
 public class PriceControllerTest {
 
-  private static final String PATH = "/api/prices";
+  private static final String PATH = "/v1/api/prices";
 
   private static final String PRODUCT_ID_PARAM = "productId";
   private static final String PRODUCT_ID_VALUE = "35455";

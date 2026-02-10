@@ -42,7 +42,7 @@ public class PriceStepDefinition {
             .setScheme("http")
             .setHost("localhost")
             .setPort(port)
-            .setPath("/api/prices")
+            .setPath("/v1/api/prices")
             .addParameter("productId", productId)
             .addParameter("brandId", brandId)
             .addParameter("dateToSearch", date)

@@ -43,4 +43,6 @@ springdoc:
 # Info application
 info:
   application:
+    description: '@project.description@'
     version: '@project.version@'
+  architecture: '@project.parent.version@'
