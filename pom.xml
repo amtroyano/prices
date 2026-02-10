@@ -22,8 +22,15 @@
         <!-- Dependencies -->
         <mapstruct.version>1.5.5.Final</mapstruct.version>
         <springdoc-openapi-starter-webmvc-ui.version>3.0.1</springdoc-openapi-starter-webmvc-ui.version>
+
+        <!-- Fix vulnerabilities -->
+        <logback.version>1.5.13</logback.version>
+        <assertj.version>3.27.3</assertj.version>
+
+        <!-- Tests -->
         <cucumber-junit-platform-engine.version>7.15.0</cucumber-junit-platform-engine.version>
-        <httpclient5.version>5.4.1</httpclient5.version>
+        <httpclient5.version>5.4.3</httpclient5.version>
+        <archunit-junit5.version>1.4.1</archunit-junit5.version>
 
         <!-- Plugins -->
         <openapi-generator-maven-plugin.version>7.19.0</openapi-generator-maven-plugin.version>
@@ -97,6 +104,7 @@
             <scope>test</scope>
         </dependency>
 
+        <!-- Cucumber -->
         <dependency>
             <groupId>io.cucumber</groupId>
             <artifactId>cucumber-java</artifactId>
@@ -128,6 +136,14 @@
             <groupId>org.apache.httpcomponents.client5</groupId>
             <artifactId>httpclient5</artifactId>
             <version>${httpclient5.version}</version>
+            <scope>test</scope>
+        </dependency>
+
+        <!-- ArchUnit -->
+        <dependency>
+            <groupId>com.tngtech.archunit</groupId>
+            <artifactId>archunit-junit5</artifactId>
+            <version>${archunit-junit5.version}</version>
             <scope>test</scope>
         </dependency>
     </dependencies>

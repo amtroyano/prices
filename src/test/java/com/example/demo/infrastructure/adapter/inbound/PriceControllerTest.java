@@ -6,9 +6,12 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import com.example.demo.application.port.inbound.GetPriceUseCase;
+import com.example.demo.application.port.GetPriceUseCase;
 import com.example.demo.domain.exceptions.PriceNotFoundException;
-import com.example.demo.infrastructure.adapter.dto.PriceResponse;
+import com.example.demo.domain.model.FilterPrice;
+import com.example.demo.domain.model.Price;
+import com.example.demo.infrastructure.adapter.inbound.mapper.PriceMapper;
+import com.example.demo.infrastructure.adapter.inbound.mapper.PriceMapperImpl;
 import java.math.BigDecimal;
 import java.time.OffsetDateTime;
 import org.junit.jupiter.api.BeforeEach;
@@ -17,16 +20,17 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
+import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
 @ExtendWith(MockitoExtension.class)
 @WebMvcTest(PriceController.class)
+@Import(PriceMapperImpl.class)
 public class PriceControllerTest {
 
   private static final String PATH = "/v1/api/prices";
-
   private static final String PRODUCT_ID_PARAM = "productId";
   private static final String PRODUCT_ID_VALUE = "35455";
   private static final String BRAND_ID_PARAM = "brandId";
@@ -38,6 +42,7 @@ public class PriceControllerTest {
   private static final String CURRENCY = "EUR";
 
   @Autowired private MockMvc mockMvc;
+  @Autowired private PriceMapper priceMapper;
 
   @MockitoBean private GetPriceUseCase getPriceUseCase;
 
@@ -46,18 +51,17 @@ public class PriceControllerTest {
 
   @Test
   void getPrice() throws Exception {
-    PriceResponse expected =
-        PriceResponse.builder()
-            .productId(35455L)
-            .brandId(1)
-            .priceList(4)
-            .startDate(OffsetDateTime.parse("2020-06-15T16:00:00+01:00"))
-            .endDate(OffsetDateTime.parse("2020-12-31T23:59:59+01:00"))
-            .finalPrice(BigDecimal.valueOf(FINAL_PRICE))
-            .currency(CURRENCY)
-            .build();
+    Price expected =
+        new Price(
+            35455L,
+            1,
+            4,
+            OffsetDateTime.parse("2020-06-15T16:00:00+01:00"),
+            OffsetDateTime.parse("2020-12-31T23:59:59+01:00"),
+            BigDecimal.valueOf(FINAL_PRICE),
+            CURRENCY);
 
-    when(getPriceUseCase.execute(any(), any(), any())).thenReturn(expected);
+    when(getPriceUseCase.execute(any(FilterPrice.class))).thenReturn(expected);
 
     mockMvc
         .perform(
@@ -84,7 +88,7 @@ public class PriceControllerTest {
 
   @Test
   void getPrice_NotFound() throws Exception {
-    when(getPriceUseCase.execute(any(), any(), any())).thenThrow(PriceNotFoundException.class);
+    when(getPriceUseCase.execute(any(FilterPrice.class))).thenThrow(PriceNotFoundException.class);
 
     mockMvc
         .perform(

@@ -6,15 +6,18 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import com.example.demo.application.mapper.DomainToInfrastructureMapper;
-import com.example.demo.application.mapper.DomainToInfrastructureMapperImpl;
-import com.example.demo.application.port.inbound.GetPriceUseCase;
+import com.example.demo.application.port.GetPriceUseCase;
 import com.example.demo.domain.exceptions.PriceNotFoundException;
 import com.example.demo.domain.model.FilterPrice;
-import com.example.demo.infrastructure.adapter.dto.PriceResponse;
+import com.example.demo.domain.model.Price;
+import com.example.demo.infrastructure.adapter.inbound.mapper.PriceMapper;
+import com.example.demo.infrastructure.adapter.inbound.mapper.PriceMapperImpl;
+import com.example.demo.infrastructure.adapter.persistence.PricePersistenceAdapter;
+import com.example.demo.infrastructure.adapter.persistence.mapper.PricePersistenceMapper;
+import com.example.demo.infrastructure.adapter.persistence.mapper.PricePersistenceMapperImpl;
 import com.example.demo.infrastructure.persistence.entity.MoneyEntity;
 import com.example.demo.infrastructure.persistence.entity.PriceEntity;
-import com.example.demo.infrastructure.persistence.repository.PriceRepositoryPort;
+import com.example.demo.infrastructure.persistence.repository.JpaPriceRepository;
 import java.math.BigDecimal;
 import java.time.OffsetDateTime;
 import java.util.Optional;
@@ -34,49 +37,53 @@ class PriceUseCaseTest {
   private static final Double FINAL_PRICE = 38.95;
   private static final String CURRENCY = "EUR";
 
-  @Mock private PriceRepositoryPort priceRepositoryPort;
+  @Mock private JpaPriceRepository jpaPriceRepository;
 
-  private DomainToInfrastructureMapper domainToInfrastructureMapper;
+  private PriceMapper priceMapper;
   private GetPriceUseCase getPriceUseCase;
 
   @BeforeEach
   void setup() {
-    domainToInfrastructureMapper = new DomainToInfrastructureMapperImpl();
-    getPriceUseCase = new PriceUseCase(domainToInfrastructureMapper, priceRepositoryPort);
+    priceMapper = new PriceMapperImpl();
+    PricePersistenceMapper pricePersistenceMapper = new PricePersistenceMapperImpl();
+    PricePersistenceAdapter pricePersistenceAdapter =
+        new PricePersistenceAdapter(jpaPriceRepository, pricePersistenceMapper);
+    getPriceUseCase = new PriceUseCase(pricePersistenceAdapter);
   }
 
   @Test
   void execute_WithValidValues() {
-    PriceEntity priceEntity = new PriceEntity();
-    priceEntity.setId(1L);
-    priceEntity.setProductId(PRODUCT_ID_VALUE);
-    priceEntity.setBrandId(BRAND_ID_VALUE);
-    priceEntity.setPriceList(4);
-    priceEntity.setPriority(0);
-    priceEntity.setStartDate(OffsetDateTime.parse("2020-06-15T16:00:00+01:00"));
-    priceEntity.setEndDate(OffsetDateTime.parse("2020-12-31T23:59:59+01:00"));
-    priceEntity.setAmount(new MoneyEntity(BigDecimal.valueOf(FINAL_PRICE), CURRENCY));
-
-    PriceResponse expected =
-        PriceResponse.builder()
+    PriceEntity priceEntity =
+        PriceEntity.builder()
             .productId(PRODUCT_ID_VALUE)
             .brandId(BRAND_ID_VALUE)
             .priceList(4)
+            .priority(0)
             .startDate(OffsetDateTime.parse("2020-06-15T16:00:00+01:00"))
             .endDate(OffsetDateTime.parse("2020-12-31T23:59:59+01:00"))
-            .finalPrice(BigDecimal.valueOf(FINAL_PRICE))
-            .currency(CURRENCY)
+            .amount(new MoneyEntity(BigDecimal.valueOf(FINAL_PRICE), CURRENCY))
             .build();
 
-    when(priceRepositoryPort.findTopPrice(any(FilterPrice.class)))
+    Price expected =
+        new Price(
+            PRODUCT_ID_VALUE,
+            BRAND_ID_VALUE,
+            4,
+            OffsetDateTime.parse("2020-06-15T16:00:00+01:00"),
+            OffsetDateTime.parse("2020-12-31T23:59:59+01:00"),
+            BigDecimal.valueOf(FINAL_PRICE),
+            CURRENCY);
+
+    when(jpaPriceRepository.findTopPrice(any(FilterPrice.class)))
         .thenReturn(Optional.of(priceEntity));
 
-    PriceResponse actual =
+    Price actual =
         getPriceUseCase.execute(
-            PRODUCT_ID_VALUE, BRAND_ID_VALUE, OffsetDateTime.parse(DATE_TO_SEARCH_VALUE));
+            priceMapper.toDomain(
+                PRODUCT_ID_VALUE, BRAND_ID_VALUE, OffsetDateTime.parse(DATE_TO_SEARCH_VALUE)));
 
     ArgumentCaptor<FilterPrice> priceEntityCaptor = ArgumentCaptor.forClass(FilterPrice.class);
-    verify(priceRepositoryPort).findTopPrice(priceEntityCaptor.capture());
+    verify(jpaPriceRepository).findTopPrice(priceEntityCaptor.capture());
     FilterPrice filterPrice = priceEntityCaptor.getValue();
     assertThat(filterPrice.brandId()).isEqualTo(BRAND_ID_VALUE);
     assertThat(filterPrice.productId()).isEqualTo(PRODUCT_ID_VALUE);
@@ -87,12 +94,13 @@ class PriceUseCaseTest {
 
   @Test
   void execute_WithNoValidValues() {
-    when(priceRepositoryPort.findTopPrice(any(FilterPrice.class))).thenReturn(Optional.empty());
+    when(jpaPriceRepository.findTopPrice(any(FilterPrice.class))).thenReturn(Optional.empty());
 
     assertThatThrownBy(
             () ->
                 getPriceUseCase.execute(
-                    PRODUCT_ID_VALUE, 10, OffsetDateTime.parse(DATE_TO_SEARCH_VALUE)))
+                    priceMapper.toDomain(
+                        PRODUCT_ID_VALUE, 10, OffsetDateTime.parse(DATE_TO_SEARCH_VALUE))))
         .isInstanceOf(PriceNotFoundException.class);
   }
 }

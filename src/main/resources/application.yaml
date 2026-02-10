@@ -37,7 +37,3 @@ info:
     description: '@project.description@'
     version: '@project.version@'
   architecture: '@project.parent.version@'
-
-logging:
-  level:
-    org.springframework.boot.autoconfigure.h2: DEBUG

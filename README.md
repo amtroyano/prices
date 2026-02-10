@@ -20,7 +20,7 @@ El proyecto está estructurado para aislar la lógica de negocio de las dependen
 
 - **`domain`**: Contiene el modelo de negocio y las excepciones de dominio.
 - **`application`**: Define los casos de uso con entrada y salida de datos.
-- **`infrastructure`** Todo Aquello relacionado con el framework que no pertenece ni a casos de uso ni a dominio.
+- **`infrastructure`** Todo aquello relacionado con el framework que no pertenece ni a casos de uso ni a dominio.
 
 ## 🛠️ Instalación y Ejecución
 
