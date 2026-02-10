@@ -7,7 +7,7 @@
   },
   "servers": [
     {
-      "url": "http://localhost:8080",
+      "url": "http://localhost:8080/v1",
       "description": "Generated server url"
     }
   ],
@@ -28,46 +28,43 @@
         "operationId": "getPrice",
         "parameters": [
           {
-            "name": "brandId",
-            "in": "query",
-            "description": "ID de la cadena (1 = ZARA)",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int32",
-              "minimum": 1
-            },
-            "example": 1
-          },
-          {
             "name": "productId",
             "in": "query",
-            "description": "ID del producto",
+            "description": "Identificador del producto",
             "required": true,
             "schema": {
               "type": "integer",
               "format": "int64",
               "minimum": 1
-            },
-            "example": 35455
+            }
           },
           {
-            "name": "applicationDate",
+            "name": "brandId",
+            "in": "query",
+            "description": "Identificador de la marca",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "minimum": 1
+            }
+          },
+          {
+            "name": "dateToSearch",
             "in": "query",
             "description": "Fecha de aplicación (ISO 8601)",
             "required": true,
             "schema": {
               "type": "string",
               "format": "date-time"
-            },
-            "example": "2020-06-14T10:00:00"
+            }
           }
         ],
         "responses": {
           "200": {
             "description": "Precio encontrado",
             "content": {
-              "*/*": {
+              "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/PriceResponse"
                 }
@@ -77,9 +74,15 @@
           "404": {
             "description": "No se encontró un precio aplicable",
             "content": {
-              "*/*": {
+              "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "example": {
+                  "timestamp": "2020-06-14T16:00:00Z",
+                  "status": 404,
+                  "message": "No existe tarifa para la fecha indicada",
+                  "path": "/api/prices"
                 }
               }
             }
@@ -87,9 +90,31 @@
           "400": {
             "description": "Parámetros de entrada inválidos",
             "content": {
-              "*/*": {
+              "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "example": {
+                  "timestamp": "2020-06-14T10:00:00Z",
+                  "status": 400,
+                  "message": "Parámetros de entrada inválidos",
+                  "path": "/api/prices"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Error Interno",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "example": {
+                  "timestamp": "2020-06-14T16:00:00Z",
+                  "status": 500,
+                  "message": "Error Interno del servidor",
+                  "path": "/api/prices"
                 }
               }
             }
@@ -100,29 +125,6 @@
   },
   "components": {
     "schemas": {
-      "ErrorResponse": {
-        "type": "object",
-        "description": "Objeto de error",
-        "properties": {
-          "timestamp": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "status": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "error": {
-            "type": "string"
-          },
-          "message": {
-            "type": "string"
-          },
-          "path": {
-            "type": "string"
-          }
-        }
-      },
       "PriceResponse": {
         "type": "object",
         "description": "Información del precio final aplicable",
@@ -130,37 +132,59 @@
           "productId": {
             "type": "integer",
             "format": "int64",
-            "example": 35455
+            "readOnly": true
           },
           "brandId": {
             "type": "integer",
             "format": "int32",
-            "example": 1
+            "readOnly": true
           },
           "priceList": {
             "type": "integer",
             "format": "int32",
-            "description": "Tarifa de precios aplicable",
-            "example": 1
+            "readOnly": true
           },
           "startDate": {
             "type": "string",
             "format": "date-time",
-            "example": "2020-06-14-00.00.00"
+            "readOnly": true
           },
           "endDate": {
             "type": "string",
             "format": "date-time",
-            "example": "2020-06-14-00.00.00"
+            "readOnly": true
           },
           "finalPrice": {
             "type": "number",
-            "format": "double",
-            "example": "2020-06-14-00.00.00"
+            "readOnly": true
           },
           "currency": {
             "type": "string",
-            "example": "2020-06-14-00.00.00"
+            "readOnly": true
+          }
+        }
+      },
+      "ErrorResponse": {
+        "type": "object",
+        "description": "Objeto de error",
+        "properties": {
+          "timestamp": {
+            "type": "string",
+            "format": "date-time",
+            "readOnly": true
+          },
+          "status": {
+            "type": "integer",
+            "format": "int32",
+            "readOnly": true
+          },
+          "message": {
+            "type": "string",
+            "readOnly": true
+          },
+          "path": {
+            "type": "string",
+            "readOnly": true
           }
         }
       }

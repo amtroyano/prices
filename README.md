@@ -6,7 +6,7 @@ bajo los estándares de **Arquitectura Hexagonal** y **Clean Code** solicitados 
 ## 🚀 Tecnologías y Herramientas
 
 * **Java 21**
-* **Spring Boot 3.x**
+* **Spring Boot 4.0.1**
 * **Spring Data JPA** con base de datos **H2** en memoria.
 * **MapStruct**: Para el mapeo de objetos entre capas (Dominio/Dbo/Dto).
 * **Lombok**: Para reducir el código repetitivo.
@@ -16,20 +16,11 @@ bajo los estándares de **Arquitectura Hexagonal** y **Clean Code** solicitados 
 
 ## 🏗️ Arquitectura: Hexagonal (Ports & Adapters)
 
-El proyecto está estructurado para aislar la lógica de negocio de las dependencias externas:
+El proyecto está estructurado para aislar la lógica de negocio de las dependencias del framework:
 
-- **`domain`**: Contiene el modelo de negocio (`Price`) y las excepciones de dominio. No tiene dependencias de
-    - **Exceptions**: Las excepciones del negocio.
-    - **model**: Los objetos que representan el dominio.
-      frameworks.
-- **`application`**: Define los puertos de entrada (`GetPriceUseCase`) y salida (`PriceRepositoryPort`), además de la
-  implementación del servicio.
-    - **ports**: Puertos de en trada y salida
-    - **usecase**: Los casos de uso de la aplicación.
-- **`infrastructure`**:
-    - **Adapters Inbound**: Controlador REST, DTOs de respuesta y validaciones.
-    - **Adapters Outbound**: Repositorio JPA, Entidades de base de datos y Mappers.
-    - **Configuration**: Gestión global de excepciones (`@RestControllerAdvice`) y configuración de OpenAPI.
+- **`domain`**: Contiene el modelo de negocio y las excepciones de dominio.
+- **`application`**: Define los casos de uso con entrada y salida de datos.
+- **`infrastructure`** Todo Aquello relacionado con el framework que no pertenece ni a casos de uso ni a dominio.
 
 ## 🛠️ Instalación y Ejecución
 
@@ -49,15 +40,29 @@ El proyecto está estructurado para aislar la lógica de negocio de las dependen
    ./mvnw spring-boot:run
    ```
 
-### Opción 2: Ejecución con Docker (Recomendado)
+### Opción 2: Ejecución con Docker
 
-Para levantar el servicio en un contenedor aislado:
+1. Compilar y pasar tests:
+   ```bash
+   ./mvnw clean install
+
+2. Para levantar el servicio en un contenedor aislado:
 
 ```bash
 docker build -t pricing .
 docker run -p 8080:8080 pricing
 ```
 
-### Tests
+### Opción 3: Ejecución con Docker (recomendada)
+
+Con el docker levantado en el equipo.
+
+1. Entrar dentro de la carpeta "./execution" y ejecutar:
+
+```bash
+docker-compose up -d
+```
+
+=============================================
 
 En la carpeta .postman en la raíz del proyecto, se encuentra la colección postman para hacer pruebas.

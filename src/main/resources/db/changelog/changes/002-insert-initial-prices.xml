@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+    <changeSet id="002" author="author">
+        <insert tableName="PRICES">
+            <column name="BRAND_ID" valueNumeric="1"/>
+            <column name="START_DATE" valueDate="2020-06-14T00:00:00"/>
+            <column name="END_DATE" valueDate="2020-12-31T23:59:59"/>
+            <column name="PRICE_LIST" valueNumeric="1"/>
+            <column name="PRODUCT_ID" valueNumeric="35455"/>
+            <column name="PRIORITY" valueNumeric="0"/>
+            <column name="PRICE" valueNumeric="35.50"/>
+            <column name="CURR" value="EUR"/>
+        </insert>
+        <insert tableName="PRICES">
+            <column name="BRAND_ID" valueNumeric="1"/>
+            <column name="START_DATE" valueDate="2020-06-14T15:00:00"/>
+            <column name="END_DATE" valueDate="2020-06-14T18:30:00"/>
+            <column name="PRICE_LIST" valueNumeric="2"/>
+            <column name="PRODUCT_ID" valueNumeric="35455"/>
+            <column name="PRIORITY" valueNumeric="1"/>
+            <column name="PRICE" valueNumeric="25.45"/>
+            <column name="CURR" value="EUR"/>
+        </insert>
+        <insert tableName="PRICES">
+            <column name="BRAND_ID" valueNumeric="1"/>
+            <column name="START_DATE" valueDate="2020-06-15T00:00:00"/>
+            <column name="END_DATE" valueDate="2020-06-15T11:00:00"/>
+            <column name="PRICE_LIST" valueNumeric="3"/>
+            <column name="PRODUCT_ID" valueNumeric="35455"/>
+            <column name="PRIORITY" valueNumeric="1"/>
+            <column name="PRICE" valueNumeric="30.50"/>
+            <column name="CURR" value="EUR"/>
+        </insert>
+        <insert tableName="PRICES">
+            <column name="BRAND_ID" valueNumeric="1"/>
+            <column name="START_DATE" valueDate="2020-06-15T16:00:00"/>
+            <column name="END_DATE" valueDate="2020-12-31T23:59:59"/>
+            <column name="PRICE_LIST" valueNumeric="4"/>
+            <column name="PRODUCT_ID" valueNumeric="35455"/>
+            <column name="PRIORITY" valueNumeric="1"/>
+            <column name="PRICE" valueNumeric="38.95"/>
+            <column name="CURR" value="EUR"/>
+        </insert>
+
+        <!-- ROLLBACK: Limpia los datos de este changeset sin borrar la tabla -->
+        <rollback>
+            <delete tableName="PRICES">
+                <where>PRODUCT_ID = 35455</where>
+            </delete>
+        </rollback>
+    </changeSet>
+
+</databaseChangeLog>

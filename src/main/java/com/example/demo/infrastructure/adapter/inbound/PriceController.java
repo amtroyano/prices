@@ -1,33 +1,25 @@
 package com.example.demo.infrastructure.adapter.inbound;
 
 import com.example.demo.application.port.inbound.GetPriceUseCase;
-import com.example.demo.domain.model.Price;
-import com.example.demo.infrastructure.adapter.inbound.dto.PriceResponse;
-import com.example.demo.infrastructure.adapter.inbound.mapper.PriceMapper;
-import com.example.demo.infrastructure.port.PriceControllerApi;
-import java.time.LocalDateTime;
+// import com.example.demo.infrastructure.adapter.inbound.request.FilterPriceRequest;
+// import com.example.demo.infrastructure.adapter.inbound.response.PriceResponse;
+import com.example.demo.infrastructure.adapter.dto.PriceResponse;
+import com.example.demo.infrastructure.port.PricesApi;
+import java.time.OffsetDateTime;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/api/prices")
 @RequiredArgsConstructor
-@Validated
-
-public class PriceController implements PriceControllerApi {
+public class PriceController implements PricesApi {
 
   private final GetPriceUseCase getPriceUseCase;
-  private final PriceMapper priceMapper;
 
-  @GetMapping
+  @Override
   public ResponseEntity<PriceResponse> getPrice(
-      Integer brandId, Long productId, LocalDateTime applicationDate) {
+      Long productId, Integer brandId, OffsetDateTime dateToSearch) {
 
-    Price price = getPriceUseCase.execute(brandId, productId, applicationDate);
-    return ResponseEntity.ok(priceMapper.toResponse(price));
+    return ResponseEntity.ok(getPriceUseCase.execute(productId, brandId, dateToSearch));
   }
 }

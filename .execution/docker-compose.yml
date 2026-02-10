@@ -1,0 +1,8 @@
+services:
+  api-service:
+    build:
+      context: ..
+      dockerfile: Dockerfile
+    container_name: demo-pricing-api
+    ports:
+      - "8080:8080"

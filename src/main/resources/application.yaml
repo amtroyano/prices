@@ -1,34 +1,27 @@
 # Spring Settings
 spring:
   application:
-    name: demo
+    name: '@project.name@'
 
   # Database
   datasource:
-    url: jdbc:h2:mem:pricedb;DB_CLOSE_DELAY=-1
-    driverClassName: org.h2.Driver
+    url: jdbc:h2:mem:pricedb;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE;NON_KEYWORDS=VALUE
+    driver-class-name: org.h2.Driver
+    username: sa
+    password: ""
 
   # Jpa
   jpa:
     hibernate:
-      ddl-auto: none
-    database-platform: org.hibernate.dialect.H2Dialect
+      ddl-auto: validate
     show-sql: true
     properties:
       hibernate:
         format_sql: true
 
-  # Sql
-  sql:
-    init:
-      mode: always
-      schema-locations: classpath:db/schema.sql
-      data-locations: classpath:db/data.sql
-
-  # H2
-  h2:
-    console:
-      enabled: true
+  liquibase:
+    enabled: true
+    change-log: classpath:db/changelog/db.changelog-master.xml
 
 # OpenApi
 springdoc:
@@ -37,3 +30,14 @@ springdoc:
     operations-sorter: alpha
   api-docs:
     path: /api-docs
+
+# Info application
+info:
+  application:
+    description: '@project.description@'
+    version: '@project.version@'
+  architecture: '@project.parent.version@'
+
+logging:
+  level:
+    org.springframework.boot.autoconfigure.h2: DEBUG
