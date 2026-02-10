@@ -51,7 +51,6 @@
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
 
-
         <!-- OpenApi -->
         <dependency>
             <groupId>org.springdoc</groupId>

@@ -20,7 +20,8 @@ public class PriceUseCase implements GetPriceUseCase {
   private final PriceRepositoryPort priceRepositoryPort;
 
   @Override
-  public PriceResponse execute(Long productId, Integer brandId, OffsetDateTime dateToSearch) {
+  public PriceResponse execute(
+      final Long productId, final Integer brandId, final OffsetDateTime dateToSearch) {
 
     FilterPrice filterPrice =
         domainToInfrastructureMapper.toDomain(productId, brandId, dateToSearch);

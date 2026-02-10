@@ -40,7 +40,7 @@ El proyecto está estructurado para aislar la lógica de negocio de las dependen
    ./mvnw spring-boot:run
    ```
 
-### Opción 2: Ejecución con Docker (Recomendado)
+### Opción 2: Ejecución con Docker
 
 1. Compilar y pasar tests:
    ```bash
@@ -52,5 +52,17 @@ El proyecto está estructurado para aislar la lógica de negocio de las dependen
 docker build -t pricing .
 docker run -p 8080:8080 pricing
 ```
+
+### Opción 3: Ejecución con Docker (recomendada)
+
+Con el docker levantado en el equipo.
+
+1. Entrar dentro de la carpeta "./execution" y ejecutar:
+
+```bash
+docker-compose up -d
+```
+
+=============================================
 
 En la carpeta .postman en la raíz del proyecto, se encuentra la colección postman para hacer pruebas.
