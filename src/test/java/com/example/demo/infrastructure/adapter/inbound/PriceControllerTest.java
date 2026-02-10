@@ -8,10 +8,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.example.demo.application.port.inbound.GetPriceUseCase;
 import com.example.demo.domain.exceptions.PriceNotFoundException;
-import com.example.demo.infrastructure.adapter.inbound.request.FilterPriceRequest;
-import com.example.demo.infrastructure.adapter.inbound.response.PriceResponse;
+import com.example.demo.infrastructure.adapter.dto.PriceResponse;
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -33,7 +32,7 @@ public class PriceControllerTest {
   private static final String BRAND_ID_PARAM = "brandId";
   private static final String BRAND_ID_VALUE = "1";
   private static final String DATE_TO_SEARCH_PARAM = "dateToSearch";
-  private static final String DATE_TO_SEARCH_VALUE = "2020-06-14T10:00:00";
+  private static final String DATE_TO_SEARCH_VALUE = "2020-06-14T10:00:00+01:00";
 
   private static final Double FINAL_PRICE = 38.95;
   private static final String CURRENCY = "EUR";
@@ -48,16 +47,17 @@ public class PriceControllerTest {
   @Test
   void getPrice() throws Exception {
     PriceResponse expected =
-        new PriceResponse(
-            35455L,
-            1,
-            4,
-            LocalDateTime.parse("2020-06-15T16:00:00"),
-            LocalDateTime.parse("2020-12-31T23:59:59"),
-            BigDecimal.valueOf(FINAL_PRICE),
-            CURRENCY);
+        PriceResponse.builder()
+            .productId(35455L)
+            .brandId(1)
+            .priceList(4)
+            .startDate(OffsetDateTime.parse("2020-06-15T16:00:00+01:00"))
+            .endDate(OffsetDateTime.parse("2020-12-31T23:59:59+01:00"))
+            .finalPrice(BigDecimal.valueOf(FINAL_PRICE))
+            .currency(CURRENCY)
+            .build();
 
-    when(getPriceUseCase.execute(any(FilterPriceRequest.class))).thenReturn(expected);
+    when(getPriceUseCase.execute(any(), any(), any())).thenReturn(expected);
 
     mockMvc
         .perform(
@@ -84,8 +84,7 @@ public class PriceControllerTest {
 
   @Test
   void getPrice_NotFound() throws Exception {
-    when(getPriceUseCase.execute(any(FilterPriceRequest.class)))
-        .thenThrow(PriceNotFoundException.class);
+    when(getPriceUseCase.execute(any(), any(), any())).thenThrow(PriceNotFoundException.class);
 
     mockMvc
         .perform(

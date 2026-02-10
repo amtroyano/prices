@@ -191,6 +191,7 @@
                             <configOptions>
                                 <useSpringBoot3>true</useSpringBoot3>
                                 <interfaceOnly>true</interfaceOnly>
+                                <requestMappingMode>api_interface</requestMappingMode>
                                 <useTags>true</useTags>
                                 <useRecords>true</useRecords>
                                 <useBeanValidation>true</useBeanValidation>
@@ -198,8 +199,13 @@
                                 <skipOperationExample>true</skipOperationExample>
                                 <skipDefaultInterface>true</skipDefaultInterface>
                                 <openApiNullable>false</openApiNullable>
+                                <generatedConstructorWithRequiredArgs>false</generatedConstructorWithRequiredArgs>
                                 <additionalModelTypeAnnotations>
                                     @lombok.Builder
+                                    @lombok.NoArgsConstructor
+                                    @lombok.AllArgsConstructor
+                                    @com.fasterxml.jackson.databind.annotation.JsonDeserialize(builder =
+                                    PriceResponse.PriceResponseBuilder.class)
                                 </additionalModelTypeAnnotations>
                             </configOptions>
                         </configuration>

@@ -39,3 +39,8 @@ springdoc:
     operations-sorter: alpha
   api-docs:
     path: /api-docs
+
+# Info application
+info:
+  application:
+    version: '@project.version@'
